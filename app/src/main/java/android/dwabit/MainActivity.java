@@ -33,7 +33,7 @@ import com.manusunny.pinlock.PinListener;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
-    public static String username = "Kelvin Lau";
+    public static String username = "Godot Bian";
     int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 0, FLOATING_CODE = 4000, CANCEL_CODE = 2000;
     public static int captureTime = 2000;
     TextView tv_longitude, tv_latitude;
