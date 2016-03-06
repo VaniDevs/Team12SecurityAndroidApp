@@ -1,6 +1,7 @@
 package android.dwabit.CameraLogic;
 
 
+import android.dwabit.MainActivity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.SurfaceTexture;
@@ -29,8 +30,7 @@ public class CameraTakePhoto {
     public static String name;
     public static Boolean isRunning = false;
 
-    public CameraTakePhoto(SurfaceHolder holder, final String name) throws IOException {
-        CameraTakePhoto.name = name;
+    public CameraTakePhoto(SurfaceHolder holder) throws IOException {
         camera = Camera.open();
         parameters = camera.getParameters();
         camera.setParameters(parameters);
@@ -47,7 +47,7 @@ public class CameraTakePhoto {
             }
         };
         try {
-            cameraTimer = new CountDownTimer(5000, 1000) {
+            cameraTimer = new CountDownTimer(MainActivity.captureTime, 500) {
                 @Override
                 public void onTick(long millisUntilFinished) {
 
@@ -55,8 +55,13 @@ public class CameraTakePhoto {
 
                 @Override
                 public void onFinish() {
-                    camera.startPreview();
-                    if (!isRunning) camera.takePicture(null, null, null, pictureCallback);
+                    Log.e("Camera", "Prepping Capture!");
+                    try {
+                        camera.startPreview();
+                        if (!isRunning) camera.takePicture(null, null, null, pictureCallback);
+                    } catch (Exception ignored) {
+                        Log.e("Camera", "Capture failed");
+                    }
                     Log.e("Camera", "Capture!");
                     start();
                 }

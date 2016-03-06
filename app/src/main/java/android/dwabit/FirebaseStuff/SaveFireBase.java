@@ -18,7 +18,7 @@ public class SaveFireBase {
     }
 
     class DistressSignalModel {
-        private double longitude, latitude;
+        double longitude, latitude;
         String name;
 
         public DistressSignalModel(String name, double distress_longitude, double distress_latitude) {
@@ -35,7 +35,7 @@ public class SaveFireBase {
             return longitude;
         }
 
-        public String getName(){
+        public String getName() {
             return name;
         }
     }

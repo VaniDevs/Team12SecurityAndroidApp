@@ -21,6 +21,7 @@ import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
  */
 public class FloatingView extends Service implements FloatingViewListener {
     private FloatingViewManager mFloatingViewManager;
+    public static Boolean floatingActive;
 
     @Nullable
     @Override
@@ -30,11 +31,13 @@ public class FloatingView extends Service implements FloatingViewListener {
 
     @Override
     public void onFinishFloatingView() {
+        floatingActive = false;
         stopSelf();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        floatingActive = true;
         final LayoutInflater inflater = LayoutInflater.from(this);
         final ImageView iconView = (ImageView) inflater.inflate(R.layout.widget_chathead, null, false);
         final WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
@@ -52,8 +55,8 @@ public class FloatingView extends Service implements FloatingViewListener {
             }
         });
         mFloatingViewManager = new FloatingViewManager(this, this);
-        mFloatingViewManager.setFixedTrashIconImage(R.drawable.ic_account_circle_black_48dp);
-        mFloatingViewManager.setActionTrashIconImage(R.drawable.ic_account_circle_black_48dp);
+        mFloatingViewManager.setFixedTrashIconImage(R.drawable.close);
+        mFloatingViewManager.setActionTrashIconImage(R.drawable.close);
         final FloatingViewManager.Options options = new FloatingViewManager.Options();
         options.shape = FloatingViewManager.SHAPE_CIRCLE;
         options.overMargin = (int) (16 * metrics.density);

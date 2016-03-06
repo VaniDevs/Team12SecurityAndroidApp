@@ -10,6 +10,7 @@ import android.dwabit.FirebaseStuff.LocationLogic;
 import android.dwabit.FirebaseStuff.PopulateBeforeSave;
 import android.dwabit.FloatingIcon.FloatingView;
 import android.dwabit.LockScreen.ConfirmPinActivity;
+import android.dwabit.PresentationLogic.SpamDistressSignals;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -32,11 +33,12 @@ import com.manusunny.pinlock.PinListener;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
-    String username = "Meryl";
+    public static String username = "Kelvin Lau";
     int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 0, FLOATING_CODE = 4000, CANCEL_CODE = 2000;
+    public static int captureTime = 2000;
     TextView tv_longitude, tv_latitude;
-    EditText name;
-    Button create, delete, cancel_request;
+    EditText name, et_switchRole;
+    Button create, delete, cancel_request, switchRole, btn_adddistress;
     SurfaceView camera_surface_view;
     SurfaceHolder surfaceHolder;
     LinearLayout buttonstack, cheatTopPanel;
@@ -59,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
         buttonstack = (LinearLayout) findViewById(R.id.buttonstack);
         camera_surface_view = (SurfaceView) findViewById(R.id.camera_surface_view);
         cheatTopPanel = (LinearLayout) findViewById(R.id.cheat_button);
+        switchRole = (Button) findViewById(R.id.btn_switchname);
+        et_switchRole = (EditText) findViewById(R.id.et_switchname);
+        btn_adddistress = (Button) findViewById(R.id.btn_adddistress);
+
+        FloatingView.floatingActive = false;
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_ACCESS_FINE_LOCATION);
@@ -100,11 +107,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        switchRole.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                username = et_switchRole.getText().toString();
+            }
+        });
+
+        btn_adddistress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SpamDistressSignals(v.getContext());
+            }
+        });
+
         //Get a surface
         surfaceHolder = camera_surface_view.getHolder();
         CameraTakePhoto cameraTakePhoto = null;
         try {
-            cameraTakePhoto = new CameraTakePhoto(surfaceHolder, username);
+            cameraTakePhoto = new CameraTakePhoto(surfaceHolder);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -136,22 +157,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         activityVisible = false;
+        captureTime = 5000;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         activityVisible = true;
+        captureTime = 5000;
         // Get extras just in case
         // Start the floating window
         if (getIntent().getExtras() != null) {
             Bundle extras = getIntent().getExtras();
             floating = extras.getBoolean("floating");
             checkDrawOverlayPermission();
-            if (!floating) {
+            if (!floating && !FloatingView.floatingActive) {
                 Intent intent = new Intent(this, FloatingView.class);
                 startService(intent);
                 floating = false;
+                FloatingView.floatingActive = true;
             }
         }
     }
@@ -186,7 +210,9 @@ public class MainActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (Settings.canDrawOverlays(this)) {
                     // continue here - permission was granted
-                    this.startService(new Intent(this, FloatingView.class));
+                    if (!FloatingView.floatingActive) {
+                        this.startService(new Intent(this, FloatingView.class));
+                    }
                 }
             }
         } else if (requestCode == CANCEL_CODE) {
@@ -214,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, CANCEL_CODE);
     }
 
-    public static void stopActivityAndExit(Activity activity, String username){
+    public static void stopActivityAndExit(Activity activity, String username) {
         activity.finish();
         new DeleteFireBase(activity, username, true);
         CameraTakePhoto.cameraTimer.cancel();

@@ -5,4 +5,4 @@
     android:layout_width="128dp"
     android:layout_height="128dp"
     android:padding="8dp"
-    android:src="@drawable/ic_account_circle_black_48dp" />
+    android:src="@drawable/dwabitshield" />

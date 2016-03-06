@@ -1,5 +1,6 @@
 package android.dwabit.CameraLogic;
 
+import android.dwabit.MainActivity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -30,7 +31,7 @@ public class AsyncPictureTake extends AsyncTask<byte[], Void, Void> {
         // Convert bytedata to String
         String base64data = Base64.encodeToString(resizedData, Base64.DEFAULT);
         Firebase rootRef = new Firebase("https://dwabit.firebaseio.com/");
-        Firebase pushRef = rootRef.child("DistressImages").child(CameraTakePhoto.name);
+        Firebase pushRef = rootRef.child("DistressImages").child(MainActivity.username);
 
         Map<String, String> map = new HashMap<>();
         map.put("image", base64data);
@@ -42,7 +43,10 @@ public class AsyncPictureTake extends AsyncTask<byte[], Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        CameraTakePhoto.camera.startPreview();
+        try {
+            CameraTakePhoto.camera.startPreview();
+        } catch (Exception ignored) {
+        }
         CameraTakePhoto.isRunning = false;
     }
 }
