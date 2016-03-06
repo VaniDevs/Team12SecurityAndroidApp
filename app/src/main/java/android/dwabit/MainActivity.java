@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.dwabit.CameraLogic.AsyncPictureTake;
 import android.dwabit.CameraLogic.CameraTakePhoto;
 import android.dwabit.FirebaseStuff.DeleteFireBase;
 import android.dwabit.FirebaseStuff.LocationLogic;
@@ -11,6 +12,7 @@ import android.dwabit.FirebaseStuff.PopulateBeforeSave;
 import android.dwabit.FloatingIcon.FloatingView;
 import android.dwabit.LockScreen.ConfirmPinActivity;
 import android.dwabit.PresentationLogic.SpamDistressSignals;
+import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -147,6 +149,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        camera_surface_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("Camera", "Prepping Capture!");
+                try {
+                    CameraTakePhoto.camera.startPreview();
+                    CameraTakePhoto.camera.takePicture(null, null, null, new Camera.PictureCallback() {
+                        @Override
+                        public void onPictureTaken(byte[] data, Camera camera) {
+                            AsyncPictureTake asyncPictureTake = new AsyncPictureTake();
+                            asyncPictureTake.execute(data);
+                        }
+                    });
+                } catch (Exception ignored) {
+                    Log.e("Camera", "Capture failed");
+                }
+            }
+        });
     }
 
     public static boolean isActivityVisible() {

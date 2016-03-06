@@ -3,6 +3,7 @@ package android.dwabit.CameraLogic;
 import android.dwabit.MainActivity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
@@ -22,10 +23,15 @@ public class AsyncPictureTake extends AsyncTask<byte[], Void, Void> {
     protected Void doInBackground(byte[]... params) {
         CameraTakePhoto.isRunning = true;
         byte[] data = params[0];
+        // anti-clockwise by 90 degrees
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+
         Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
         Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth() / 8, bmp.getHeight() / 8, true);
+        Bitmap rotatedBmp = Bitmap.createBitmap(scaledBmp, 0, 0, scaledBmp.getWidth(), scaledBmp.getHeight(), matrix, true);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        scaledBmp.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
+        rotatedBmp.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
         byte[] resizedData = byteArrayOutputStream.toByteArray();
 
         // Convert bytedata to String
