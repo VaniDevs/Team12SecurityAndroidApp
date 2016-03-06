@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">dwabit</string>
-
+    <string name="preference_file_key">pin_password</string>
+    <string name="pin">0000</string>
 </resources>

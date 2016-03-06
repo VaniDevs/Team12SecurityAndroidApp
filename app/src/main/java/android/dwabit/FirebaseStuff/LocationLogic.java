@@ -1,8 +1,9 @@
-package android.dwabit;
+package android.dwabit.FirebaseStuff;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.dwabit.FirebaseStuff.SaveFireBase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;

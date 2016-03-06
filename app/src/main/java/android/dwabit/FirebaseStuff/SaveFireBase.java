@@ -1,4 +1,4 @@
-package android.dwabit;
+package android.dwabit.FirebaseStuff;
 
 import android.content.Context;
 

@@ -1,4 +1,4 @@
-package android.dwabit;
+package android.dwabit.FirebaseStuff;
 
 import android.content.Context;
 import android.widget.TextView;
@@ -15,12 +15,12 @@ public class PopulateBeforeSave {
     String[] cityString = new String[]{"Vancouver", "Burnaby", "Coquitlam", "Surrey", "Downtown", "Downtown Eastside", "North Vancouver", "South Vancouver", "East Vancouver", "West Vancouver", "Port Moody", "Richmond", "Delta", "Surrey", "Langley"};
 
     public PopulateBeforeSave(Context context, String name, TextView tv_longitude, TextView tv_latitude) {
-        String gender, address, areacode, phone, street, sin, city;
+        String gender, address, areacode, phone, street, sin, city, age;
         int shortphoneInt1, shortphoneInt2, sin1, sin2, sin3, suite;
         Random random = new Random();
 
         // Random age
-        int age = random.nextInt(100);
+        age = String.valueOf(random.nextInt(100));
 
         // Random gender
         if (random.nextInt(2) == 1) gender = "Male";
@@ -59,9 +59,9 @@ public class PopulateBeforeSave {
 
     class UserInfo {
         String name, gender, address, sin, phone;
-        int age;
+        String age;
 
-        public UserInfo(String name, int age, String gender, String phone, String sin, String address) {
+        public UserInfo(String name, String age, String gender, String phone, String sin, String address) {
             this.name = name;
             this.sin = sin;
             this.gender = gender;
@@ -90,7 +90,7 @@ public class PopulateBeforeSave {
             return phone;
         }
 
-        public int getAge(){
+        public String getAge(){
             return age;
         }
     }
