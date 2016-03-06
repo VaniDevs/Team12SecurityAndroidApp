@@ -13,16 +13,18 @@ public class SaveFireBase {
         Firebase.setAndroidContext(context);
         Firebase rootRef = new Firebase("https://dwabit.firebaseio.com/");
         Firebase ref = rootRef.child("DistressSignals").child(name);
-        DistressSignalModel distressSignalModel = new DistressSignalModel(longitude, latitude);
+        DistressSignalModel distressSignalModel = new DistressSignalModel(name, longitude, latitude);
         ref.setValue(distressSignalModel);
     }
 
     class DistressSignalModel {
         private double longitude, latitude;
+        String name;
 
-        public DistressSignalModel(double distress_longitude, double distress_latitude) {
+        public DistressSignalModel(String name, double distress_longitude, double distress_latitude) {
             this.longitude = distress_longitude;
             this.latitude = distress_latitude;
+            this.name = name;
         }
 
         public double getLatitude() {
@@ -31,6 +33,10 @@ public class SaveFireBase {
 
         public double getLongitude() {
             return longitude;
+        }
+
+        public String getName(){
+            return name;
         }
     }
 }

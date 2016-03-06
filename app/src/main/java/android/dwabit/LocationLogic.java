@@ -1,7 +1,6 @@
 package android.dwabit;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -16,21 +15,21 @@ import android.widget.TextView;
  * Created by Andy on 3/5/2016.
  */
 public class LocationLogic {
-    Activity activity;
+    Context context;
     double longitude = 0, latitude = 0;
     TextView mtv_longitude, mtv_latitude;
     String username;
 
-    public LocationLogic(Activity mactivity) {
-        activity = mactivity;
+    public LocationLogic(Context mContext) {
+        this.context = mContext;
     }
 
     public void locationGetter(String username, TextView tv_longitude, TextView tv_latitude) {
         this.username = username;
         mtv_longitude = tv_longitude;
         mtv_latitude = tv_latitude;
-        LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // If not granted yet
         } else {
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -73,6 +72,6 @@ public class LocationLogic {
         Log.e("latitude", String.valueOf(latitude));
         mtv_longitude.setText(String.valueOf(longitude));
         mtv_latitude.setText(String.valueOf(latitude));
-        new SaveFireBase(activity, username, longitude, latitude);
+        new SaveFireBase(context, username, longitude, latitude);
     }
 }
